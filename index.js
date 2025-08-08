@@ -4,18 +4,16 @@ const axios = require("axios");
 const cors = require('cors');
 const app = express();
 const mysql = require("mysql2/promise");
+require('dotenv').config();
 app.use(express.json());
-const { poolPromise, sql } = require("./db"); // your MSSQL config file
+const { poolPromise, sql } = require("./db"); 
 // app.use(cors({ origin: 'http://localhost:3000' }))
-// Setup DB pool
 
+const PORT = process.env.PORT;
+const PAYPAL_API = process.env.PAYPAL_API;
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 
-const PORT = 3000;
-const PAYPAL_CLIENT_ID = "AWr_vGCRtFX1KmtKSwSv3eA2opJ9Y1m__35EAugbMWW7KQH7_V-7eM5KntsXOQSLgZFW3niICUsQli0E";
-const PAYPAL_SECRET = "EOCfkM-Uf2MmKhPxxlUf8Tg0wKy-xTUVk9j6y-hwZ-Qqi3H8nmzSIkwoPDcW68qjkkxda2Gz5B69ld6j";
-const PAYPAL_API = "https://api-m.sandbox.paypal.com";
-// const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
-// const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const getAccessToken = async () => {
   const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_SECRET}`).toString("base64");
 
@@ -417,7 +415,7 @@ app.post("/paypal/webhook", async (req, res) => {
 
     res.status(200).json({ success: true, message: "Webhook stored in DB." });
   } catch (err) {
-    console.error("❌ Webhook DB Error:", err);
+    console.error(" Webhook DB Error:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
